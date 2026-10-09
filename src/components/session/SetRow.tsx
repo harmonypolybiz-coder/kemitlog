@@ -55,11 +55,12 @@ export function SetRow({ set, workingNumber, trackingType, previous, unit, restS
   const hints = previous ? toFieldTexts(previous, trackingType, unit) : {}
 
   // Reprend les valeurs enregistrées (autre onglet, changement d'unité…) sauf pendant la saisie.
+  // La clé textuelle ne change que si une valeur affichée change réellement.
+  const storedKey = JSON.stringify(stored)
   useEffect(() => {
     if (rowRef.current?.contains(document.activeElement)) return
-    setTexts(toFieldTexts(set, trackingType, unit))
-    // `set.updatedAt` résume à lui seul l'état enregistré de la série.
-  }, [set.updatedAt, trackingType, unit])
+    setTexts(JSON.parse(storedKey) as SetFieldTexts)
+  }, [storedKey])
 
   function run(action: () => Promise<unknown>) {
     queue.current = queue.current.then(async () => {

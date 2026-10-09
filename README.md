@@ -10,6 +10,7 @@ Prérequis : Node.js 20.19+ (développé avec Node 24).
 npm install
 npm run dev        # serveur de développement
 npm run test       # tests (base de données, sauvegarde, démo, statistiques)
+npm run lint       # ESLint (règles TypeScript et React)
 npm run build      # vérification TypeScript + build de production
 npm run preview    # sert le build : c'est ici que la PWA et le mode hors ligne se testent
 ```
@@ -18,7 +19,9 @@ npm run preview    # sert le build : c'est ici que la PWA et le mode hors ligne 
 
 ## Pile technique
 
-React 19 · TypeScript · Vite · Tailwind CSS 4 · Dexie (IndexedDB) · Recharts · React Router · vite-plugin-pwa · Vitest.
+React 19 · TypeScript 6.0 · Vite · Tailwind CSS 4 · Dexie (IndexedDB) · Recharts · React Router · vite-plugin-pwa · Vitest · ESLint.
+
+TypeScript est volontairement fixé en 6.0 : `typescript-eslint` ne prend pas en charge TypeScript 7, qui n'expose plus l'API dont le linter a besoin. Ne pas monter de version tant que ce n'est pas le cas.
 
 ## Architecture
 

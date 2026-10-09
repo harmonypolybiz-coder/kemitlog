@@ -5,6 +5,7 @@ import { Card } from '@/components/ui/Card'
 import { addSet, moveWorkoutExercise, removeWorkoutExercise } from '@/db/session'
 import { errorMessage, formatExactDuration, formatSetValues, formatShortDate } from '@/lib/format'
 import { fieldLabel, FIELDS_BY_TRACKING } from '@/lib/setInput'
+import { workingSetNumbers } from '@/lib/stats'
 import type { ActiveSession, WeightUnit } from '@/types/models'
 import { SetRow } from './SetRow'
 
@@ -57,7 +58,7 @@ export function SessionExerciseCard({
     else void run(() => removeWorkoutExercise(workoutExercise.id))
   }
 
-  let workingNumber = 0
+  const numbers = workingSetNumbers(sets)
 
   return (
     <Card className="overflow-hidden">
@@ -155,12 +156,11 @@ export function SessionExerciseCard({
 
       <div className="divide-y divide-line/60">
         {sets.map((set, index) => {
-          if (set.type !== 'warmup') workingNumber += 1
           return (
             <SetRow
               key={set.id}
               set={set}
-              workingNumber={workingNumber}
+              workingNumber={numbers[index] ?? 0}
               trackingType={trackingType}
               previous={previous?.sets[index]}
               unit={unit}

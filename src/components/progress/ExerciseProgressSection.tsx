@@ -11,6 +11,7 @@ import { QueryView } from '@/components/ui/States'
 import { StatTile } from '@/components/ui/StatTile'
 import { getExerciseHistory, listTrainedExercises } from '@/db/progress'
 import { useDbQuery } from '@/hooks/useDbQuery'
+import { useNow } from '@/hooks/useNow'
 import { usePreferences } from '@/hooks/usePreferences'
 import { DAY_MS } from '@/lib/dates'
 import { formatDate, formatShortDate, plural } from '@/lib/format'
@@ -60,12 +61,13 @@ function ExerciseProgress({ exercise, sessions }: { exercise: Exercise; sessions
   const [metricId, setMetricId] = useState(metrics[0]?.id ?? '')
   const [period, setPeriod] = useState<Period>('all')
   const [view, setView] = useState<View>('chart')
+  const now = useNow(60_000)
 
   const metric = metrics.find((item) => item.id === metricId) ?? metrics[0]
   if (!metric) return null
 
   const days = PERIODS.find((option) => option.value === period)?.days
-  const since = days === undefined ? -Infinity : Date.now() - days * DAY_MS
+  const since = days === undefined ? -Infinity : now - days * DAY_MS
   const allPoints = buildSeries(sessions, metric)
   const points = allPoints.filter((point) => point.date >= since)
   const record = findRecord(points)

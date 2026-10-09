@@ -25,6 +25,18 @@ export function setVolumeKg(set: WorkoutSet): number {
   return (set.weightKg ?? 0) * (set.reps ?? 0)
 }
 
+/**
+ * Numéro de chaque série parmi les séries de travail : les échauffements ne sont pas
+ * comptés et reçoivent le numéro de la série de travail qui les précède (0 au début).
+ */
+export function workingSetNumbers(sets: ReadonlyArray<Pick<WorkoutSet, 'type'>>): number[] {
+  let count = 0
+  return sets.map((set) => {
+    if (set.type !== 'warmup') count += 1
+    return count
+  })
+}
+
 export function summarizeWorkout(workout: Workout, sets: WorkoutSet[]): WorkoutSummary {
   const workingSets = sets.filter(isWorkingSet)
   return {

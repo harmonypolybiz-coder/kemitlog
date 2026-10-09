@@ -8,6 +8,7 @@ import { StatTile } from '@/components/ui/StatTile'
 import { WorkoutSummaryCard } from '@/components/workouts/WorkoutSummaryCard'
 import { listCompletedWorkoutSummaries } from '@/db/workouts'
 import { useDbQuery } from '@/hooks/useDbQuery'
+import { useNow } from '@/hooks/useNow'
 import { usePreferences } from '@/hooks/usePreferences'
 import { formatDate, formatRelativeDay, formatShortDate, formatVolume } from '@/lib/format'
 import { computeDashboardStats } from '@/lib/stats'
@@ -17,7 +18,7 @@ const RECENT_WORKOUT_COUNT = 3
 export default function DashboardPage() {
   const { dataScope, weightUnit, weekStartsOn } = usePreferences()
   const summaries = useDbQuery(() => listCompletedWorkoutSummaries(dataScope), [dataScope])
-  const now = Date.now()
+  const now = useNow(60_000)
 
   return (
     <>

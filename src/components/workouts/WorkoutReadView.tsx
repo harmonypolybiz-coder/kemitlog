@@ -11,7 +11,7 @@ import { deleteWorkout } from '@/db/workouts'
 import { usePreferences } from '@/hooks/usePreferences'
 import { errorMessage, formatSetValues, formatVolume } from '@/lib/format'
 import { SET_TYPE_LABELS } from '@/lib/labels'
-import { setVolumeKg, summarizeWorkout } from '@/lib/stats'
+import { setVolumeKg, summarizeWorkout, workingSetNumbers } from '@/lib/stats'
 import type { WorkoutDetails } from '@/types/models'
 
 interface WorkoutReadViewProps {
@@ -75,7 +75,7 @@ export function WorkoutReadView({ details, readOnly, onEdit }: WorkoutReadViewPr
 
       {exercises.map(({ workoutExercise, exercise, sets }) => {
         const volumeKg = sets.reduce((total, set) => total + setVolumeKg(set), 0)
-        let workingNumber = 0
+        const numbers = workingSetNumbers(sets)
         return (
           <Card key={workoutExercise.id} className="overflow-hidden">
             <div className="flex items-baseline justify-between gap-4 px-4 pt-4 pb-2">
@@ -99,12 +99,11 @@ export function WorkoutReadView({ details, readOnly, onEdit }: WorkoutReadViewPr
               )}
             </div>
             <ol className="divide-y divide-line/60">
-              {sets.map((set) => {
-                if (set.type !== 'warmup') workingNumber += 1
+              {sets.map((set, index) => {
                 return (
                   <li key={set.id} className="flex items-center gap-3 px-4 py-2.5">
                     <span className="w-6 shrink-0 text-center font-display text-lg font-semibold text-muted tabular-nums">
-                      {set.type === 'warmup' ? '·' : workingNumber}
+                      {set.type === 'warmup' ? '·' : numbers[index]}
                     </span>
                     <span className="min-w-0 flex-1 font-medium tabular-nums">
                       {formatSetValues(set, weightUnit)}

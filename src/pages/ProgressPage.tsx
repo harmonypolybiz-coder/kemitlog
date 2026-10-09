@@ -8,6 +8,7 @@ import { SegmentedControl } from '@/components/ui/SegmentedControl'
 import { EmptyState, QueryView } from '@/components/ui/States'
 import { listCompletedWorkoutSummaries } from '@/db/workouts'
 import { useDbQuery } from '@/hooks/useDbQuery'
+import { useNow } from '@/hooks/useNow'
 import { usePreferences } from '@/hooks/usePreferences'
 import { formatShortDate, formatVolume } from '@/lib/format'
 import { bucketByWeek } from '@/lib/stats'
@@ -25,6 +26,7 @@ export default function ProgressPage() {
   const { dataScope, weightUnit, weekStartsOn } = usePreferences()
   const summaries = useDbQuery(() => listCompletedWorkoutSummaries(dataScope), [dataScope])
   const [view, setView] = useState<View>('chart')
+  const now = useNow(60_000)
 
   return (
     <>
@@ -41,7 +43,7 @@ export default function ProgressPage() {
             )
           }
 
-          const buckets = bucketByWeek(data, { now: Date.now(), weekCount: WEEK_COUNT, weekStartsOn })
+          const buckets = bucketByWeek(data, { now, weekCount: WEEK_COUNT, weekStartsOn })
           return (
             <div className="space-y-5">
             <Card className="p-4 sm:p-6">

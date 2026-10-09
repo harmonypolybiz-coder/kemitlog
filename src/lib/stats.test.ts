@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import type { Workout, WorkoutSet } from '@/types/models'
 import { startOfWeek } from './dates'
 import { formatDuration, formatExactDuration } from './format'
-import { bucketByWeek, computeDashboardStats, summarizeWorkout } from './stats'
+import { bucketByWeek, computeDashboardStats, summarizeWorkout, workingSetNumbers } from './stats'
 
 // Mercredi 17 juin 2026, midi.
 const NOW = new Date(2026, 5, 17, 12).getTime()
@@ -91,5 +91,13 @@ describe('formatage des durées', () => {
 
   it('arrondit la durée des séances à la minute', () => {
     expect([58 * 60 + 20, 65 * 60].map(formatDuration)).toEqual(['58 min', '1 h 05'])
+  })
+})
+
+describe('numérotation des séries', () => {
+  it('ne compte pas les échauffements', () => {
+    const types = ['warmup', 'normal', 'warmup', 'drop', 'failure'] as const
+    expect(workingSetNumbers(types.map((type) => ({ type })))).toEqual([0, 1, 1, 2, 3])
+    expect(workingSetNumbers([])).toEqual([])
   })
 })

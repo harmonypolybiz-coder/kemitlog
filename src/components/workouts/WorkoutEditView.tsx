@@ -15,6 +15,7 @@ import {
   WORKOUT_NAME_MAX_LENGTH,
   WORKOUT_NOTES_MAX_LENGTH,
 } from '@/db/session'
+import { useNow } from '@/hooks/useNow'
 import { usePreferences } from '@/hooks/usePreferences'
 import { fromDateTimeLocal, toDateTimeLocal } from '@/lib/dates'
 import { errorMessage, plural } from '@/lib/format'
@@ -45,6 +46,7 @@ export function WorkoutEditView({ details, onDone }: WorkoutEditViewProps) {
   const [pickerOpen, setPickerOpen] = useState(false)
   const [pending, setPending] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const now = useNow(60_000)
 
   const pendingSets = exercises.flatMap((entry) => entry.sets).filter((set) => !set.completed).length
 
@@ -104,7 +106,7 @@ export function WorkoutEditView({ details, onDone }: WorkoutEditViewProps) {
             label="Début"
             type="datetime-local"
             value={start}
-            max={toDateTimeLocal(Date.now())}
+            max={toDateTimeLocal(now)}
             onChange={(event) => setStart(event.target.value)}
             onBlur={saveSchedule}
           />
